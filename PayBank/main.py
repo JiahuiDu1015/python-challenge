@@ -8,59 +8,63 @@ total_months = 0
 net_total = 0
 total_changes = 0
 num_changes = 0
+month_changes = []
 previous_profit_loss = None
 changes = []
 average_change = 0
-greatest_increase_date = None
-greatest_increase_amount = 0
+greatest_increase = ["",0]
+greatest_decrease = ["",9999999999999999999]
 
 
 with open(csv_file_path, 'r') as csvfile:
-    csvreader = csv.reader(csvfile, delimiter=',')
-
+    csvreader = csv.reader(csvfile)
+    
     csv_header = next(csvreader)
     print(f"csv Header: {csv_header}")
+    first_row = next(csvreader)
+    total_months += 1
+    net_total += int(first_row[1])
+    previous_profit_loss = int(first_row[1])
 
-   # for row in csvreader:
-       # print(row)
+    for row in csvreader:
 
     # calculate total months
-    for row in csvreader:
         total_months += 1
-    print(f'Total Months: {total_months}')
+    
 
     # calculate the net total amount of "Profit/Losses"
+        net_total += int(row[1])
+    
 
-    for row in csvreader:
-         net_total += int(row['Profit/Losses'])
-    print(f"Net Total Amount of Profit/Losses: ${net_total}")
-
-    for row in csvreader:
-        current_profit_loss = int(row['Profit/Losses'])
+    # calculate average change and changes list
+        average_change = int(row[1]) - previous_profit_loss
+        previous_profit_loss = int(row[1])
+        changes += [average_change]
+        month_changes += [row[0]] 
+    
         
-        if previous_profit_loss is not None:
-            change = current_profit_loss - previous_profit_loss
-            total_changes += change
-            num_changes += 1
-            changes.append(change)
+    # Calculate Greatest Increase
+        if average_change > greatest_increase[1]:
+           greatest_increase[0] = row[0]
+           greatest_increase[1] = average_change
         
-        previous_profit_loss = current_profit_loss
+    # Calculate Greatest Increase
+        if average_change < greatest_decrease[1]:
+           greatest_decrease[0] = row[0]
+           greatest_decrease[1] = average_change
 
-    print(f"Total Changes: {total_changes}")
-    print(f"Average Change: {average_change}")
+average_change_final = sum(changes) / len(changes)
 
-    for row in csvreader:
-        date = row[0]
-        profit = int(row[1])
-    print(f"Greatest increase in profits: {greatest_increase_date}")
-    print(f"Greatest decrease in profits: {greatest_increase_date}")
+output = (f"Total Months: {total_months}\n"
+          f"Net Total Amount of Profit/Losses: ${net_total}\n"
+          f"Average Change: ${average_change_final}\n"
+          f"Greatest increase in profits: {greatest_increase}\n"
+          f"Greatest decrease in profits: {greatest_decrease}")
+
+print(output)
 
 txt_file_path = 'output.txt'
 with open(txt_file_path, 'w') as txtfile:
-     txtfile.write("Total Months: 86")
-     txtfile.write("Net Total Amount of Profit/Losses: $0")
-     txtfile.write("Total Changes: 0")
-     txtfile.write("Average Change: 0")
-     txtfile.write("Greatest increase in profits: None")
-     txtfile.write("Greatest decrease in profits: None")
+     txtfile.write(output)
+     
 

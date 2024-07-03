@@ -1,6 +1,5 @@
 Total Months: 86
-Net Total Amount of Profit/Losses: $0
-Total Changes: 0
-Average Change: 0
-Greatest increase in profits: None
-Greatest decrease in profits: None
+Net Total Amount of Profit/Losses: $22564198
+Average Change: $-8311.105882352942
+Greatest increase in profits: ['Aug-16', 1862002]
+Greatest decrease in profits: ['Feb-14', -1825558]
